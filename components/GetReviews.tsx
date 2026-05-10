@@ -18,22 +18,24 @@ export default function GetReviews() {
   const g = t.getReviews;
 
   return (
-    <section id="get-reviews" className="py-24 sm:py-32 bg-white overflow-hidden">
+    <section id="get-reviews" className="py-20 sm:py-32 bg-white overflow-hidden">
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+          {/* Text */}
           <div>
             <div className="inline-flex items-center gap-2 text-green-700 text-xs font-semibold bg-green-50 border border-green-200 px-3 py-1.5 rounded-full mb-5">
               {g.badge}
             </div>
-            <h2 className="text-stone-900 font-bold text-3xl sm:text-4xl md:text-5xl leading-tight tracking-tight mb-5">
+            <h2 className="text-stone-900 font-bold text-3xl sm:text-4xl md:text-5xl leading-tight tracking-tight mb-4">
               {g.headline1}{" "}
               <span className="text-green-500">{g.headline2}</span>
               <br />
               {g.headline3}{" "}
               <span className="underline decoration-stone-300 decoration-2 underline-offset-4">{g.headline4}</span>
             </h2>
-            <p className="text-stone-500 text-lg leading-relaxed mb-6">{g.sub}</p>
-            <ul className="space-y-3 mb-8">
+            <p className="text-stone-500 text-base sm:text-lg leading-relaxed mb-5">{g.sub}</p>
+            <ul className="space-y-2.5 mb-7">
               {g.bullets.map((item) => (
                 <li key={item} className="flex items-start gap-2.5 text-stone-600 text-sm">
                   <span className="mt-0.5 w-4 h-4 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">
@@ -59,9 +61,9 @@ export default function GetReviews() {
             </div>
           </div>
 
-          {/* Visual */}
-          <div className="relative">
-            <div className="bg-stone-50 rounded-2xl border border-stone-200 p-8 mb-4 card-shadow text-center">
+          {/* Visual — hidden on very small mobile, shown from sm up */}
+          <div className="hidden sm:block relative">
+            <div className="bg-stone-50 rounded-2xl border border-stone-200 p-6 sm:p-8 mb-4 card-shadow text-center">
               <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
                   <path d="M11 2l2 4 4.5.65-3.25 3.17.77 4.5L11 12l-4.02 2.32.77-4.5L4.5 6.65 9 6z" fill="white"/>
@@ -70,7 +72,6 @@ export default function GetReviews() {
               <h3 className="text-stone-900 font-bold text-xl mb-1">{g.cardTitle}</h3>
               <p className="text-stone-400 text-sm mb-6">{g.cardSub}</p>
 
-              {/* Google option */}
               <div className="bg-white border-2 border-green-400 rounded-xl p-4 mb-3 flex items-center gap-3 shadow-sm">
                 <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
                   <GoogleLogo size={20} />
@@ -84,7 +85,6 @@ export default function GetReviews() {
                 </svg>
               </div>
 
-              {/* Private option */}
               <div className="bg-white border border-stone-200 rounded-xl p-4 flex items-center gap-3">
                 <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center shrink-0">
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -110,6 +110,22 @@ export default function GetReviews() {
                 <p className="text-amber-700 text-xs font-semibold">{g.critical}</p>
                 <p className="text-stone-400 text-xs mt-1">{g.criticalDesc}</p>
               </div>
+            </div>
+          </div>
+
+          {/* Mobile-only: simple flow diagram */}
+          <div className="sm:hidden grid grid-cols-2 gap-3">
+            <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
+              <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+                <GoogleLogo size={16} />
+              </div>
+              <p className="text-green-700 text-xs font-semibold">{g.positive}</p>
+              <p className="text-stone-400 text-xs mt-1">{g.positiveDesc}</p>
+            </div>
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
+              <div className="text-amber-500 text-2xl mb-2">💬</div>
+              <p className="text-amber-700 text-xs font-semibold">{g.critical}</p>
+              <p className="text-stone-400 text-xs mt-1">{g.criticalDesc}</p>
             </div>
           </div>
         </div>
