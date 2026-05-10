@@ -1,0 +1,385 @@
+"use client";
+
+import { createContext, useContext, useState, ReactNode } from "react";
+
+type Lang = "en" | "nl";
+
+const translations = {
+  en: {
+    nav: {
+      features: "Features",
+      howItWorks: "How it works",
+      pricing: "Pricing",
+      reviews: "Reviews",
+      login: "Log in",
+      cta: "Try for free",
+    },
+    hero: {
+      badge: "New · Google Business Profile integration live",
+      headline1: "More stars,",
+      headline2: "more revenue.",
+      sub: "Re:view manages your Google reviews automatically with AI — from smart replies to collecting more reviews. Built for restaurants, cafés and hotels.",
+      statLabel: "more revenue per extra star",
+      statSource: "Harvard Business Review",
+      cta1: "Try free for 14 days",
+      cta2: "How it works",
+      trust: "No credit card required · Set up in 2 minutes · Cancel anytime",
+      logoBar: "Trusted by hospitality businesses across the Netherlands",
+    },
+    stats: {
+      eyebrow: "Why reviews are the most underrated growth factor in hospitality",
+      items: [
+        { value: "9%", prefix: "up to", label: "more revenue per extra star", description: "One more star on your Google rating has a direct impact on your revenue." },
+        { value: "33%", prefix: undefined, label: "update their rating after a reply", description: "Of customers who receive a response to a negative review, one third update their score or return." },
+        { value: "95%", prefix: undefined, label: "read reviews before buying", description: "And 85% trust them as much as a personal recommendation from friends." },
+        { value: "15%", prefix: undefined, label: "higher churn when you don't reply", description: "Businesses that consistently ignore reviews lose significantly more customers." },
+      ],
+    },
+    features: {
+      badge: "Manage Reviews · €40/month",
+      headline1: "Your reviews,",
+      headline2: "professionally managed",
+      sub: "Re:view takes over the entire review workflow. AI writes replies that sound like you wrote them yourself — so you can focus on your guests.",
+      ctaMain: "Try Manage Reviews free",
+      ctaSecondary: "View pricing →",
+      items: [
+        { title: "Google connection in 30 sec", description: "Connect your Google Business Profile instantly. All reviews, synced in real time." },
+        { title: "AI writes your replies", description: "Personal, in your tone. Configurable per location — always on-brand." },
+        { title: "Auto-reply or your approval", description: "Fully automatic, or you approve each reply. Choose per star rating." },
+        { title: "Analytics & score insights", description: "Average score, review volume and response speed in one dashboard." },
+        { title: "Real-time notifications", description: "New review? Instant alert via email or Slack. Never miss a thing." },
+        { title: "Multiple locations", description: "One dashboard, all your venues. Each location with its own settings." },
+      ],
+    },
+    getReviews: {
+      badge: "Get Reviews · Add-on",
+      headline1: "Send happy guests",
+      headline2: "to Google.",
+      headline3: "Catch criticism",
+      headline4: "privately.",
+      sub: "Re:view's smart review page sends happy guests straight to your Google profile. Less satisfied guests can leave private feedback — so you can respond before it goes public.",
+      bullets: [
+        "QR code for tables, receipts or business cards",
+        "Personal review link per location",
+        "Positive reviews → Google Business Profile",
+        "Critical feedback → private inbox, you respond first",
+        "Fully within Google's guidelines",
+      ],
+      ctaBtn: "Try Get Reviews",
+      ctaPrice: "From €10/month",
+      cardTitle: "How was your visit?",
+      cardSub: "Your opinion helps us improve",
+      googleOption: "Leave a review on Google",
+      googleSub: "Share your experience publicly",
+      privateOption: "Send us direct feedback",
+      privateSub: "Tell us personally",
+      cardFooter: "Both are appreciated",
+      positive: "Positive → Google",
+      positiveDesc: "More public reviews",
+      critical: "Critical → Private inbox",
+      criticalDesc: "You handle it first",
+    },
+    howItWorks: {
+      badge: "Simple and fast",
+      headline1: "Ready in",
+      headline2: "2 minutes.",
+      headline3: "Active forever.",
+      sub: "No technical knowledge needed. Re:view is designed for business owners, not IT departments.",
+      ctaBtn: "Get started today",
+      steps: [
+        { title: "Connect your Google profile", description: "Log in with your Google account and connect your Business Profile in under a minute. Re:view imports all your existing reviews instantly.", detail: "Works with single and multiple locations" },
+        { title: "AI learns your style", description: "Enter a few words about your restaurant or café — tone, atmosphere, cuisine type. Re:view tailors its replies accordingly.", detail: "Customisable per location" },
+        { title: "Reviews get handled", description: "Every new review gets a personalised reply automatically. You can approve before sending or let everything run fully automatically.", detail: "Inbox zero for reviews" },
+        { title: "Watch your score rise", description: "Track your average rating in real time. Responding faster to reviews is proven to improve your position in Google Maps.", detail: "Average +0.4 stars in 60 days" },
+      ],
+    },
+    pricing: {
+      badge: "Transparent pricing",
+      headline: "Choose what fits you",
+      sub: "No hidden costs. Always 14 days free. Cancel whenever you want.",
+      perMonth: "/month",
+      exclVat: "excl. VAT · cancel monthly",
+      ctaBtn: "Try free for 14 days",
+      plans: [
+        {
+          name: "Get Reviews",
+          price: "10",
+          tagline: "Collect more reviews",
+          description: "Collect more Google reviews with smart QR codes and review links. Send happy guests to Google, catch criticism privately.",
+          badge: null,
+          features: ["Smart review page (QR + link)", "Positive → Google, critical → private", "Unlimited QR codes per location", "Private feedback inbox", "Multiple locations"],
+        },
+        {
+          name: "Manage Reviews",
+          price: "40",
+          tagline: "Professionally reply to reviews",
+          description: "AI writes personalised replies to all your Google reviews. Automatic or with your approval — you stay in control.",
+          badge: "Most popular",
+          features: ["AI-written replies to every review", "Auto-reply or manual approval", "Brand tone configurable per location", "Analytics & score insights", "Real-time notifications (email/Slack)", "Google Business Profile connection"],
+        },
+        {
+          name: "Complete",
+          price: "50",
+          tagline: "Everything in one",
+          description: "Combine Manage Reviews and Get Reviews for the complete solution. Collect more reviews and manage them professionally.",
+          badge: "Best value",
+          features: ["Everything in Get Reviews", "Everything in Manage Reviews", "Priority support", "Early access to new features", "Unlimited locations"],
+        },
+      ],
+      faq: [
+        { q: "Can I upgrade later?", a: "Yes — switch at any time from Get Reviews to Manage Reviews or the Complete plan." },
+        { q: "Does it work with multiple locations?", a: "Absolutely. All plans support multiple venues under one account." },
+        { q: "What happens after the trial?", a: "You choose whether to continue. No automatic charge without your consent." },
+      ],
+    },
+    socialProof: {
+      badge: "What our customers say",
+      headline1: "Hospitality businesses",
+      headline2: "growing",
+      headline3: "with Re:view",
+      sub: "From small cafés to large hotels — Re:view works for every hospitality entrepreneur.",
+      testimonials: [
+        { name: "Lotte van den Berg", role: "Owner · Bistro Oranje, Amsterdam", text: "Before Re:view I left reviews unanswered for months. Now AI responds within an hour to every review. My average score went from 4.2 to 4.7 in two months.", metric: "4.2 → 4.7", metricLabel: "stars in 2 months" },
+        { name: "Daan Molenaar", role: "Manager · Hotel Waterfront, Rotterdam", text: "We manage three locations. Re:view saves us at least 5 hours a week. The replies always sound human — guests can't even tell the difference.", metric: "5 hrs", metricLabel: "saved per week" },
+        { name: "Roos Janssen", role: "Owner · Café De Hoek, Utrecht", text: "The QR codes on our tables tripled our review volume. New guests now see more than 80 fresh reviews. That makes a real difference.", metric: "3×", metricLabel: "more reviews per month" },
+      ],
+      stats: [
+        { value: "4.8★", label: "Average score customers" },
+        { value: "98%", label: "Reviews answered" },
+        { value: "+0.4★", label: "Score increase in 60 days" },
+        { value: "< 1h", label: "Average response time" },
+      ],
+    },
+    cta: {
+      stars: "4.8 out of 200+ reviews",
+      headline1: "Ready to let your reviews",
+      headline2: "work for you?",
+      sub: "Start free — no credit card required. Connect your Google profile and see your first AI replies go live within 24 hours.",
+      ctaMain: "Try free for 14 days",
+      ctaSecondary: "View a demo",
+      trust: ["No credit card", "Set up in 2 min", "Cancel anytime"],
+    },
+    footer: {
+      tagline: "Review management for hospitality. Connect your Google profile and let AI manage your online reputation.",
+      ctaBtn: "Try for free",
+      login: "Log in",
+      product: "Product",
+      company: "Company",
+      legal: "Legal",
+      links: {
+        features: "Features",
+        howItWorks: "How it works",
+        reviews: "Reviews",
+        dashboard: "Dashboard",
+        about: "About us",
+        blog: "Blog",
+        contact: "Contact",
+        privacy: "Privacy",
+        terms: "Terms of service",
+      },
+      status: "All systems operational",
+      copyright: "Made with ❤️ in the Netherlands.",
+    },
+  },
+  nl: {
+    nav: {
+      features: "Functies",
+      howItWorks: "Hoe het werkt",
+      pricing: "Prijzen",
+      reviews: "Reviews",
+      login: "Inloggen",
+      cta: "Gratis proberen",
+    },
+    hero: {
+      badge: "Nieuw · Google Business Profile integratie live",
+      headline1: "Meer sterren,",
+      headline2: "meer omzet.",
+      sub: "Re:view beheert jouw Google reviews automatisch met AI — van slimme reacties tot meer reviews verzamelen. Gebouwd voor restaurants, cafés en hotels in Nederland.",
+      statLabel: "meer omzet per extra ster",
+      statSource: "Harvard Business Review",
+      cta1: "14 dagen gratis proberen",
+      cta2: "Hoe het werkt",
+      trust: "Geen creditcard vereist · Opzetten in 2 minuten · Opzeggen wanneer je wil",
+      logoBar: "Vertrouwd door horecabedrijven in heel Nederland",
+    },
+    stats: {
+      eyebrow: "Waarom reviews de meest onderschatte groeifactor zijn voor horeca",
+      items: [
+        { value: "9%", prefix: "tot", label: "meer omzet per extra ster", description: "Eén ster meer op je Google rating heeft direct impact op je omzet." },
+        { value: "33%", prefix: undefined, label: "past beoordeling aan na reactie", description: "Van klanten die een reactie krijgen op een negatieve review past een derde hun score aan of komt terug." },
+        { value: "95%", prefix: undefined, label: "leest reviews voor aankoop", description: "En 85% vertrouwt ze net zoveel als een persoonlijke aanbeveling van vrienden." },
+        { value: "15%", prefix: undefined, label: "hoger klantverloop bij niet reageren", description: "Bedrijven die reviews structureel negeren verliezen significant meer klanten." },
+      ],
+    },
+    features: {
+      badge: "Manage Reviews · €40/maand",
+      headline1: "Jouw reviews,",
+      headline2: "professioneel beheerd",
+      sub: "Re:view neemt het beantwoorden van reviews volledig over. AI schrijft reacties die klinken alsof jij ze zelf hebt geschreven — zodat jij je kunt focussen op je gasten.",
+      ctaMain: "Probeer Manage Reviews gratis",
+      ctaSecondary: "Bekijk prijzen →",
+      items: [
+        { title: "Google koppeling in 30 sec", description: "Verbind je Google Business Profile direct. Alle reviews, realtime gesynchroniseerd." },
+        { title: "AI schrijft jouw reacties", description: "Persoonlijk, in jouw toon. Instelbaar per vestiging — altijd on-brand." },
+        { title: "Auto-reply of jouw goedkeuring", description: "Volledig automatisch, of jij keurt elke reactie goed. Kies per sterrenaantal." },
+        { title: "Analytics & score-inzichten", description: "Gemiddelde score, reviewvolume en responssnelheid in één dashboard." },
+        { title: "Realtime notificaties", description: "Nieuwe review? Direct een melding via e-mail of Slack. Nooit meer iets missen." },
+        { title: "Meerdere vestigingen", description: "Eén dashboard, al jouw locaties. Elke vestiging met eigen instellingen." },
+      ],
+    },
+    getReviews: {
+      badge: "Reviews verzamelen · Add-on",
+      headline1: "Stuur tevreden gasten",
+      headline2: "naar Google.",
+      headline3: "Vang kritiek",
+      headline4: "privé op.",
+      sub: "Re:view's slimme review-pagina stuurt tevreden gasten direct door naar jouw Google profiel. Minder tevreden gasten kunnen privé feedback achterlaten — zodat jij kunt reageren voor het publiek wordt.",
+      bullets: [
+        "QR code voor op tafel, bon of visitekaartje",
+        "Persoonlijke review-link per vestiging",
+        "Positieve reviews → Google Business Profile",
+        "Kritische feedback → privé inbox, jij reageert eerst",
+        "Werkt volledig binnen de Google-richtlijnen",
+      ],
+      ctaBtn: "Probeer Get Reviews",
+      ctaPrice: "Vanaf €10/maand",
+      cardTitle: "Hoe was je bezoek?",
+      cardSub: "Jouw mening helpt ons om te verbeteren",
+      googleOption: "Laat een review achter op Google",
+      googleSub: "Deel je ervaring publiek",
+      privateOption: "Stuur ons directe feedback",
+      privateSub: "Vertel het ons persoonlijk",
+      cardFooter: "Allebei wordt gewaardeerd",
+      positive: "Positief → Google",
+      positiveDesc: "Meer publieke reviews",
+      critical: "Kritisch → Privé inbox",
+      criticalDesc: "Jij lost het op",
+    },
+    howItWorks: {
+      badge: "Simpel en snel",
+      headline1: "Klaar in",
+      headline2: "2 minuten.",
+      headline3: "Actief voor altijd.",
+      sub: "Geen technische kennis nodig. Re:view is ontworpen voor ondernemers, niet voor IT'ers.",
+      ctaBtn: "Begin vandaag nog",
+      steps: [
+        { title: "Koppel je Google profiel", description: "Log in met je Google account en koppel je Business Profile in minder dan een minuut. Re:view importeert al je bestaande reviews direct.", detail: "Werkt met enkelvoudige én meerdere locaties" },
+        { title: "AI leert jouw stijl", description: "Voer een paar woorden in over jouw restaurant of café — toon, sfeer, type keuken. Re:view past hier zijn reacties op aan.", detail: "Aanpasbaar per vestiging" },
+        { title: "Reviews worden beheerd", description: "Elke nieuwe review krijgt automatisch een persoonlijke reactie. Jij kunt goedkeuren voor verzending of alles volledig automatisch laten gaan.", detail: "Inbox zero voor reviews" },
+        { title: "Zie je score stijgen", description: "Volg je gemiddelde beoordeling in realtime. Sneller reageren op reviews is bewezen beter voor je positie in Google Maps.", detail: "Gemiddeld +0.4 sterren in 60 dagen" },
+      ],
+    },
+    pricing: {
+      badge: "Transparante prijzen",
+      headline: "Kies wat bij jou past",
+      sub: "Geen verborgen kosten. Altijd 14 dagen gratis proberen. Opzeggen wanneer je wil.",
+      perMonth: "/maand",
+      exclVat: "excl. BTW · maandelijks opzegbaar",
+      ctaBtn: "14 dagen gratis proberen",
+      plans: [
+        {
+          name: "Get Reviews",
+          price: "10",
+          tagline: "Meer reviews binnenhalen",
+          description: "Verzamel meer Google reviews met slimme QR codes en review-links. Stuur tevreden gasten naar Google, vang kritiek privé op.",
+          badge: null,
+          features: ["Slimme review-pagina (QR + link)", "Positief → Google, kritisch → privé", "Onbeperkte QR codes per locatie", "Privé feedback inbox", "Meerdere vestigingen"],
+        },
+        {
+          name: "Manage Reviews",
+          price: "40",
+          tagline: "Reviews professioneel beantwoorden",
+          description: "AI schrijft persoonlijke reacties op al jouw Google reviews. Automatisch of met jouw goedkeuring — jij hebt de controle.",
+          badge: "Meest gekozen",
+          features: ["AI-geschreven reacties op elke review", "Auto-reply of handmatige goedkeuring", "Merkstijl instelbaar per vestiging", "Analytics & score-inzichten", "Realtime notificaties (email/Slack)", "Google Business Profile koppeling"],
+        },
+        {
+          name: "Compleet",
+          price: "50",
+          tagline: "Alles in één",
+          description: "Combineer Manage Reviews én Get Reviews voor de complete oplossing. Meer reviews binnenhalen én ze professioneel beheren.",
+          badge: "Beste waarde",
+          features: ["Alles van Get Reviews", "Alles van Manage Reviews", "Prioriteit support", "Vroege toegang tot nieuwe functies", "Onbeperkte vestigingen"],
+        },
+      ],
+      faq: [
+        { q: "Kan ik later upgraden?", a: "Ja — switch op elk moment van Get Reviews naar Manage Reviews of het Compleet pakket." },
+        { q: "Werkt het met meerdere locaties?", a: "Absoluut. Alle plannen ondersteunen meerdere vestigingen onder één account." },
+        { q: "Wat na de proefperiode?", a: "Je kiest zelf of je doorgaat. Geen automatische afschrijving zonder jouw akkoord." },
+      ],
+    },
+    socialProof: {
+      badge: "Wat onze klanten zeggen",
+      headline1: "Horecaondernemers die",
+      headline2: "groeien",
+      headline3: "met Re:view",
+      sub: "Van kleine cafés tot grote hotels — Re:view werkt voor iedere horecaondernemer.",
+      testimonials: [
+        { name: "Lotte van den Berg", role: "Eigenaar · Bistro Oranje, Amsterdam", text: "Voor Re:view liet ik reviews maandenlang onbeantwoord. Nu reageert AI binnen een uur op elke review. Mijn gemiddelde score is in twee maanden gestegen van 4.2 naar 4.7.", metric: "4.2 → 4.7", metricLabel: "sterren in 2 maanden" },
+        { name: "Daan Molenaar", role: "Bedrijfsleider · Hotel Waterfront, Rotterdam", text: "Wij beheren drie locaties. Re:view bespaart ons minstens 5 uur per week. De reacties klinken altijd menselijk — gasten merken het verschil niet eens.", metric: "5 uur", metricLabel: "bespaard per week" },
+        { name: "Roos Janssen", role: "Eigenaar · Café De Hoek, Utrecht", text: "De QR codes op onze tafels hebben ons reviewvolume verdriedubbeld. Nieuwe gasten zien nu meer dan 80 verse reviews. Dat maakt echt verschil.", metric: "3×", metricLabel: "meer reviews per maand" },
+      ],
+      stats: [
+        { value: "4.8★", label: "Gemiddelde score klanten" },
+        { value: "98%", label: "Reviews beantwoord" },
+        { value: "+0.4★", label: "Score stijging in 60 dagen" },
+        { value: "< 1u", label: "Gemiddelde responstijd" },
+      ],
+    },
+    cta: {
+      stars: "4.8 uit 200+ reviews",
+      headline1: "Klaar om jouw reviews",
+      headline2: "voor je te laten werken?",
+      sub: "Start gratis — geen creditcard nodig. Koppel je Google profiel en zie binnen 24 uur je eerste AI-reacties live gaan.",
+      ctaMain: "14 dagen gratis proberen",
+      ctaSecondary: "Bekijk een demo",
+      trust: ["Geen creditcard", "Opzetten in 2 min", "Opzeggen wanneer je wil"],
+    },
+    footer: {
+      tagline: "Review management voor de horeca. Koppel je Google profiel en laat AI jouw online reputatie beheren.",
+      ctaBtn: "Gratis proberen",
+      login: "Inloggen",
+      product: "Product",
+      company: "Bedrijf",
+      legal: "Juridisch",
+      links: {
+        features: "Functies",
+        howItWorks: "Hoe het werkt",
+        reviews: "Reviews",
+        dashboard: "Dashboard",
+        about: "Over ons",
+        blog: "Blog",
+        contact: "Contact",
+        privacy: "Privacy",
+        terms: "Gebruiksvoorwaarden",
+      },
+      status: "Alle systemen operationeel",
+      copyright: "Gemaakt met ❤️ in Nederland.",
+    },
+  },
+};
+
+export type Translations = typeof translations.en;
+
+const LanguageContext = createContext<{
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  t: Translations;
+}>({
+  lang: "en",
+  setLang: () => {},
+  t: translations.en,
+});
+
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [lang, setLang] = useState<Lang>("en");
+  return (
+    <LanguageContext.Provider value={{ lang, setLang, t: translations[lang] }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+}
+
+export function useLanguage() {
+  return useContext(LanguageContext);
+}
