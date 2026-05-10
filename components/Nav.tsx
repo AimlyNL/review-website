@@ -33,22 +33,16 @@ export default function Nav() {
 
         {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-7">
-          <a
-            href="#features"
-            className="text-sm text-stone-600 hover:text-stone-900 transition-colors font-medium"
-          >
+          <a href="#features" className="text-sm text-stone-600 hover:text-stone-900 transition-colors font-medium">
             Functies
           </a>
-          <a
-            href="#how-it-works"
-            className="text-sm text-stone-600 hover:text-stone-900 transition-colors font-medium"
-          >
+          <a href="#how-it-works" className="text-sm text-stone-600 hover:text-stone-900 transition-colors font-medium">
             Hoe het werkt
           </a>
-          <a
-            href="#reviews"
-            className="text-sm text-stone-600 hover:text-stone-900 transition-colors font-medium"
-          >
+          <a href="#pricing" className="text-sm text-stone-600 hover:text-stone-900 transition-colors font-medium">
+            Prijzen
+          </a>
+          <a href="#reviews" className="text-sm text-stone-600 hover:text-stone-900 transition-colors font-medium">
             Reviews
           </a>
         </div>
