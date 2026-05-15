@@ -100,9 +100,9 @@ export default function Hero() {
           <div className="relative w-full h-[420px] sm:h-[460px]">
             <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 via-emerald-400/10 to-blue-400/15 rounded-3xl blur-3xl" />
 
-            {/* DASHBOARD — backdrop, dominant */}
+            {/* DASHBOARD — backdrop, dominant, top edge exposed so Re:view logo is visible */}
             <div
-              className="absolute top-[10%] left-[6%] w-[88%] rotate-[1.5deg] animate-fade-up delay-200"
+              className="absolute top-0 left-[6%] w-[86%] rotate-[1deg] animate-fade-up delay-200"
               style={{ zIndex: 10 }}
             >
               <div className="bg-surface rounded-2xl border border-border-soft card-shadow overflow-hidden">
@@ -180,9 +180,9 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* MAPS — top-left overlay */}
+            {/* MAPS — top-left overlay, positioned BELOW dashboard chrome so logo stays visible */}
             <div
-              className="absolute top-0 left-0 sm:-left-3 w-[44%] sm:w-[42%] -rotate-[5deg] animate-fade-up delay-300"
+              className="absolute top-[18%] left-0 sm:-left-4 w-[44%] sm:w-[40%] -rotate-[6deg] animate-fade-up delay-300"
               style={{ zIndex: 20 }}
             >
               <div className="bg-surface rounded-xl border border-border-soft card-shadow overflow-hidden">
@@ -223,12 +223,12 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* CHATGPT — bottom-right overlay */}
+            {/* CHATGPT — bottom-right overlay. Outer wrapper handles fade-up, inner does float (avoids animation conflict) */}
             <div
-              className="absolute bottom-0 right-0 sm:-right-3 w-[52%] sm:w-[50%] rotate-[3deg] animate-fade-up delay-500 animate-float"
+              className="absolute bottom-0 right-0 sm:-right-4 w-[54%] sm:w-[50%] animate-fade-up delay-500"
               style={{ zIndex: 20 }}
             >
-              <div className="bg-surface rounded-2xl border border-border-soft card-shadow overflow-hidden">
+              <div className="rotate-[3deg] animate-float bg-surface rounded-2xl border border-border-soft card-shadow overflow-hidden">
                 {/* ChatGPT header */}
                 <div className="flex items-center justify-between px-3 py-2 bg-surface-2/60 border-b border-border-soft">
                   <div className="flex items-center gap-1.5">
