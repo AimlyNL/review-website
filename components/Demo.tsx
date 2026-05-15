@@ -57,62 +57,57 @@ export default function Demo() {
   const d = t.demo;
 
   return (
-    <section className="py-20 sm:py-28 bg-surface-2/50 overflow-hidden">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="text-center max-w-xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest text-text-subtle font-semibold mb-4">
-            <span className="w-6 h-px bg-text-subtle/40"/>
+    <section className="py-14 sm:py-16 bg-surface-2/40 overflow-hidden">
+      <div className="max-w-5xl mx-auto px-5 sm:px-8">
+        <div className="text-center max-w-xl mx-auto mb-8">
+          <div className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest text-text-subtle font-semibold mb-2">
+            <span className="w-4 h-px bg-text-subtle/40"/>
             30+ languages
-            <span className="w-6 h-px bg-text-subtle/40"/>
+            <span className="w-4 h-px bg-text-subtle/40"/>
           </div>
-          <h2 className="text-foreground font-bold text-3xl sm:text-4xl md:text-5xl leading-tight tracking-tight mb-3">
+          <h2 className="text-foreground font-bold text-xl sm:text-2xl leading-tight tracking-tight mb-1.5">
             {d.title}
           </h2>
-          <p className="text-text-muted text-base sm:text-lg leading-relaxed">{d.sub}</p>
+          <p className="text-text-subtle text-sm leading-relaxed">{d.sub}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {examples.map((ex, i) => (
-            <div key={i} className="bg-surface rounded-2xl border border-border-soft overflow-hidden hover:shadow-lg transition-shadow duration-300">
-              <div className="flex items-center justify-between px-4 py-2 bg-surface-2/60 border-b border-border-soft">
+            <div key={i} className="bg-surface rounded-xl border border-border-soft overflow-hidden hover:border-text-subtle/40 transition-colors">
+              <div className="flex items-center justify-between px-3 py-1.5 bg-surface-2/60 border-b border-border-soft">
                 <div className="flex items-center gap-1.5">
-                  <GoogleLogo />
-                  <span className="text-[10px] font-medium text-text-muted">via Google</span>
+                  <GoogleLogo size={10}/>
+                  <span className="text-[9px] font-medium text-text-muted">via Google</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[9px] font-bold tracking-wider text-text-subtle bg-surface px-1.5 py-0.5 rounded border border-border-soft">{ex.lang}</span>
-                  <span className="text-[10px] text-text-subtle">{ex.timeAgo}</span>
-                </div>
+                <span className="text-[8px] font-bold tracking-wider text-text-subtle bg-surface px-1.5 py-0.5 rounded border border-border-soft">{ex.lang}</span>
               </div>
 
-              <div className="p-4">
-                <div className="flex items-start gap-3 mb-2">
-                  <div className={`w-9 h-9 rounded-full ${ex.color} flex items-center justify-center text-white text-sm font-semibold shrink-0`}>
+              <div className="p-3">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className={`w-6 h-6 rounded-full ${ex.color} flex items-center justify-center text-white text-[10px] font-semibold shrink-0`}>
                     {ex.initial}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-foreground mb-1">{ex.name}</div>
-                    <div className="flex gap-0.5">
+                    <div className="text-[11px] font-semibold text-foreground leading-tight">{ex.name}</div>
+                    <div className="flex gap-px mt-0.5">
                       {Array.from({ length: 5 }).map((_, idx) => (
-                        <svg key={idx} width="11" height="11" viewBox="0 0 12 12" fill={idx < ex.rating ? "#fbbf24" : "currentColor"} className={idx < ex.rating ? "" : "text-border-soft"}>
+                        <svg key={idx} width="8" height="8" viewBox="0 0 12 12" fill={idx < ex.rating ? "#fbbf24" : "currentColor"} className={idx < ex.rating ? "" : "text-border-soft"}>
                           <path d="M6 1l1.5 3 3.5.5-2.5 2.5.5 3.5L6 8.5 3 10.5l.5-3.5L1 4.5 4.5 4z"/>
                         </svg>
                       ))}
                     </div>
                   </div>
                 </div>
-                <p className="text-sm text-text-muted leading-relaxed">&ldquo;{ex.review}&rdquo;</p>
-              </div>
+                <p className="text-[11px] text-text-muted leading-snug line-clamp-2">&ldquo;{ex.review}&rdquo;</p>
 
-              <div className="px-4 pb-4">
-                <div className="bg-green-500/8 dark:bg-green-500/10 rounded-xl p-3 border border-green-500/20">
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <div className="mt-2 pt-2 border-t border-border-soft">
+                  <div className="flex items-center gap-1 mb-1">
+                    <svg width="9" height="9" viewBox="0 0 11 11" fill="none">
                       <path d="M5.5 1L7 4l3 .5L7.75 6.75 8.5 10 5.5 8.25 2.5 10l.75-3.25L1 4.5 4 4z" fill="#22c55e"/>
                     </svg>
-                    <span className="text-[10px] font-semibold text-green-600 dark:text-green-400 uppercase tracking-wider">AI reply · {ex.lang}</span>
+                    <span className="text-[9px] font-semibold text-green-600 dark:text-green-400 uppercase tracking-wider">AI · {ex.lang}</span>
                   </div>
-                  <p className="text-[13px] text-foreground/80 leading-relaxed">{ex.reply}</p>
+                  <p className="text-[11px] text-foreground/80 leading-snug line-clamp-2">{ex.reply}</p>
                 </div>
               </div>
             </div>

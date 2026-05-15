@@ -14,15 +14,15 @@ function GoogleLogo({ size = 28 }: { size?: number }) {
 }
 
 const stepVisuals = [
-  // Step 1: Account icon
-  <svg key="account" width="28" height="28" viewBox="0 0 28 28" fill="none">
+  // Step 1: Account
+  <svg key="account" width="32" height="32" viewBox="0 0 28 28" fill="none">
     <circle cx="14" cy="10" r="4" stroke="currentColor" strokeWidth="1.8"/>
     <path d="M5 24c0-4.97 4.03-9 9-9s9 4.03 9 9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
   </svg>,
   // Step 2: Google
-  <GoogleLogo key="google" size={28} />,
+  <GoogleLogo key="google" size={32} />,
   // Step 3: Sparkles
-  <svg key="sparkle" width="28" height="28" viewBox="0 0 28 28" fill="none">
+  <svg key="sparkle" width="32" height="32" viewBox="0 0 28 28" fill="none">
     <path d="M14 4v6M14 18v6M4 14h6M18 14h6M7 7l4 4M17 17l4 4M21 7l-4 4M11 17l-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
   </svg>,
 ];
@@ -32,9 +32,17 @@ export default function HowItWorks() {
   const h = t.howItWorks;
 
   return (
-    <section id="how-it-works" className="py-20 sm:py-28 bg-background">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+    <section id="how-it-works" className="relative py-20 sm:py-28 bg-background overflow-hidden">
+      {/* Decorative blobs */}
+      <div className="absolute -left-32 top-1/3 w-72 h-72 bg-green-500/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -right-32 bottom-1/4 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-8">
         <div className="text-center max-w-xl mx-auto mb-14 sm:mb-20">
+          <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest text-green-600 dark:text-green-400 font-semibold mb-4">
+            <span className="w-1 h-1 rounded-full bg-green-500 animate-pulse-dot"/>
+            5 min · zero code
+          </div>
           <h2 className="text-foreground font-bold text-3xl sm:text-4xl md:text-5xl leading-tight tracking-tight mb-3">
             {h.title}
           </h2>
@@ -42,16 +50,42 @@ export default function HowItWorks() {
         </div>
 
         <div className="relative">
-          <div className="hidden md:block absolute top-9 left-[16.67%] right-[16.67%] h-px bg-gradient-to-r from-transparent via-border-soft to-transparent" />
+          {/* Animated dashed connector with traveling dot — desktop only */}
+          <svg
+            aria-hidden
+            className="hidden md:block absolute top-[44px] left-[16.67%] right-[16.67%] h-px w-[66.66%] mx-auto pointer-events-none"
+            viewBox="0 0 800 4"
+            preserveAspectRatio="none"
+            style={{ height: 4 }}
+          >
+            <defs>
+              <linearGradient id="howline" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#22c55e" stopOpacity="0"/>
+                <stop offset="20%" stopColor="#22c55e" stopOpacity="0.5"/>
+                <stop offset="80%" stopColor="#22c55e" stopOpacity="0.5"/>
+                <stop offset="100%" stopColor="#22c55e" stopOpacity="0"/>
+              </linearGradient>
+            </defs>
+            <line x1="0" y1="2" x2="800" y2="2" stroke="url(#howline)" strokeWidth="2" strokeDasharray="6 8"/>
+            <circle r="3" fill="#22c55e">
+              <animateMotion dur="3.6s" repeatCount="indefinite" path="M0,2 L800,2"/>
+            </circle>
+          </svg>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-6">
             {h.steps.map((step, i) => (
-              <div key={i} className="relative flex flex-col items-center text-center">
+              <div
+                key={i}
+                className="group relative flex flex-col items-center text-center animate-fade-up"
+                style={{ animationDelay: `${0.1 + i * 0.12}s`, opacity: 0 }}
+              >
+                {/* Icon tile */}
                 <div className="relative mb-6">
-                  <div className="w-[72px] h-[72px] rounded-2xl bg-surface border border-border-soft card-shadow flex items-center justify-center text-foreground">
+                  <div className="absolute inset-0 bg-green-500/20 blur-xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative w-[88px] h-[88px] rounded-2xl bg-surface border border-border-soft card-shadow flex items-center justify-center text-foreground group-hover:-translate-y-1 group-hover:border-green-500/50 transition-all duration-300">
                     {stepVisuals[i]}
                   </div>
-                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-foreground text-background text-[11px] font-bold flex items-center justify-center">
+                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-green-500 text-white text-xs font-extrabold flex items-center justify-center shadow-lg ring-4 ring-background">
                     {step.num}
                   </div>
                 </div>

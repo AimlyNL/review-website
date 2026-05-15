@@ -87,34 +87,82 @@ export default function GetReviews() {
                 </div>
               </div>
 
-              {/* Phone mockup */}
+              {/* Phone mockup with dual-route */}
               <div className="bg-foreground rounded-[2rem] p-2 card-shadow rotate-[3deg] hover:rotate-0 transition-transform duration-300">
                 <div className="bg-background rounded-[1.6rem] overflow-hidden">
                   <div className="h-5 flex items-center justify-center">
                     <div className="w-16 h-1 rounded-full bg-foreground/30"/>
                   </div>
                   <div className="p-4 pb-5">
-                    <div className="text-center mb-4">
+                    <div className="text-center mb-3.5">
                       <div className="text-[10px] font-semibold text-text-subtle uppercase tracking-widest mb-1">Aimly Utrecht</div>
-                      <div className="text-foreground text-base font-bold leading-tight">{g.cardTitle}</div>
+                      <div className="text-foreground text-[15px] font-bold leading-tight">{g.cardTitle}</div>
                       <div className="text-[11px] text-text-subtle mt-0.5">{g.cardSub}</div>
                     </div>
-                    <div className="flex justify-center gap-1.5 mb-4">
-                      {[1, 2, 3, 4, 5].map(i => (
-                        <button key={i} className={`w-8 h-8 rounded-full flex items-center justify-center ${i === 5 ? "bg-green-500" : "bg-surface-2"} transition-colors`}>
-                          <svg width="14" height="14" viewBox="0 0 12 12" fill={i === 5 ? "white" : "#a8a29e"}>
-                            <path d="M6 1l1.5 3 3.5.5-2.5 2.5.5 3.5L6 8.5 3 10.5l.5-3.5L1 4.5 4.5 4z"/>
-                          </svg>
-                        </button>
-                      ))}
+
+                    {/* Stars with gradient highlight */}
+                    <div className="flex justify-center gap-1 mb-4">
+                      {[1, 2, 3, 4, 5].map(i => {
+                        const isPositive = i >= 4;
+                        return (
+                          <div
+                            key={i}
+                            className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
+                              isPositive ? "bg-green-500" : "bg-surface-2 border border-border-soft"
+                            }`}
+                          >
+                            <svg width="13" height="13" viewBox="0 0 12 12" fill={isPositive ? "white" : "#a8a29e"}>
+                              <path d="M6 1l1.5 3 3.5.5-2.5 2.5.5 3.5L6 8.5 3 10.5l.5-3.5L1 4.5 4.5 4z"/>
+                            </svg>
+                          </div>
+                        );
+                      })}
                     </div>
-                    <div className="bg-surface-2 border border-border-soft rounded-lg p-2.5 flex items-center gap-2">
-                      <GoogleLogo size={14}/>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[10px] text-text-subtle">Posting to</div>
-                        <div className="text-[11px] font-semibold text-foreground">Google Business</div>
+
+                    {/* Smart routing label */}
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="flex-1 h-px bg-border-soft"/>
+                      <div className="text-[9px] uppercase tracking-widest text-text-subtle font-semibold flex items-center gap-1">
+                        <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                          <path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        {g.splitLabel}
                       </div>
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-foreground"/></svg>
+                      <div className="flex-1 h-px bg-border-soft"/>
+                    </div>
+
+                    {/* Dual routes */}
+                    <div className="space-y-1.5">
+                      {/* Positive → Google */}
+                      <div className="bg-green-500/10 dark:bg-green-500/15 border border-green-500/30 rounded-lg p-2 flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-md bg-surface flex items-center justify-center shrink-0 border border-border-soft">
+                          <GoogleLogo size={13}/>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[11px] font-semibold text-foreground leading-tight">{g.routeReview}</div>
+                          <div className="text-[9px] text-text-subtle mt-px">{g.routeReviewDesc}</div>
+                        </div>
+                        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" className="text-green-600 dark:text-green-400 shrink-0">
+                          <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+
+                      {/* Negative → Private feedback */}
+                      <div className="bg-surface-2/60 border border-border-soft rounded-lg p-2 flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-md bg-surface flex items-center justify-center shrink-0 border border-border-soft text-text-muted">
+                          <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                            <path d="M2.5 3h9a1 1 0 011 1v6a1 1 0 01-1 1h-9a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.2"/>
+                            <path d="M2.5 4l4.5 3.5L11.5 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                          </svg>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[11px] font-semibold text-foreground leading-tight">{g.routeFeedback}</div>
+                          <div className="text-[9px] text-text-subtle mt-px">{g.routeFeedbackDesc}</div>
+                        </div>
+                        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" className="text-text-subtle shrink-0">
+                          <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -52,6 +52,11 @@ const translations = {
       step3Desc: "Re:view replies automatically in the guest's own language.",
       cardTitle: "How was your visit?",
       cardSub: "Tap a rating to continue",
+      routeReview: "Review on Google",
+      routeFeedback: "Send private feedback",
+      routeReviewDesc: "4–5★ guests",
+      routeFeedbackDesc: "1–3★ guests",
+      splitLabel: "Smart routing",
     },
     howItWorks: {
       title: "Three steps to launch",
@@ -166,6 +171,11 @@ const translations = {
       step3Desc: "Re:view reageert automatisch in de taal van de gast.",
       cardTitle: "Hoe was je bezoek?",
       cardSub: "Tik een waardering om door te gaan",
+      routeReview: "Review op Google",
+      routeFeedback: "Stuur private feedback",
+      routeReviewDesc: "4–5★ gasten",
+      routeFeedbackDesc: "1–3★ gasten",
+      splitLabel: "Slimme routing",
     },
     howItWorks: {
       title: "In 3 stappen klaar",
