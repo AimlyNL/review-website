@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/lib/i18n";
 
-function GoogleLogo({ size = 18 }: { size?: number }) {
+function GoogleLogo({ size = 14 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -13,123 +13,158 @@ function GoogleLogo({ size = 18 }: { size?: number }) {
   );
 }
 
+// Deterministic pseudo-QR grid (decorative only)
+function QrCode() {
+  const N = 21;
+  const cells: boolean[][] = [];
+  let seed = 7;
+  const rand = () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
+  for (let r = 0; r < N; r++) {
+    const row: boolean[] = [];
+    for (let c = 0; c < N; c++) row.push(rand() > 0.5);
+    cells.push(row);
+  }
+  // Add the three corner finder squares
+  const setFinder = (or: number, oc: number) => {
+    for (let r = 0; r < 7; r++) {
+      for (let c = 0; c < 7; c++) {
+        const isEdge = r === 0 || r === 6 || c === 0 || c === 6;
+        const isCenter = r >= 2 && r <= 4 && c >= 2 && c <= 4;
+        cells[or + r][oc + c] = isEdge || isCenter;
+      }
+    }
+  };
+  setFinder(0, 0); setFinder(0, N - 7); setFinder(N - 7, 0);
+
+  return (
+    <svg viewBox={`0 0 ${N} ${N}`} className="w-full h-full" shapeRendering="crispEdges">
+      <rect width={N} height={N} fill="white"/>
+      {cells.map((row, r) =>
+        row.map((on, c) => (on ? <rect key={`${r}-${c}`} x={c} y={r} width={1} height={1} fill="#1c1917"/> : null))
+      )}
+    </svg>
+  );
+}
+
 export default function GetReviews() {
   const { t } = useLanguage();
   const g = t.getReviews;
 
   return (
-    <section id="get-reviews" className="py-20 sm:py-32 bg-white overflow-hidden">
+    <section id="get-reviews" className="py-20 sm:py-28 bg-background">
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-
-          {/* Text */}
-          <div>
-            <div className="inline-flex items-center gap-2 text-green-700 text-xs font-semibold bg-green-50 border border-green-200 px-3 py-1.5 rounded-full mb-5">
-              {g.badge}
-            </div>
-            <h2 className="text-stone-900 font-bold text-3xl sm:text-4xl md:text-5xl leading-tight tracking-tight mb-4">
-              {g.headline1}{" "}
-              <span className="text-green-500">{g.headline2}</span>
-              <br />
-              {g.headline3}{" "}
-              <span className="underline decoration-stone-300 decoration-2 underline-offset-4">{g.headline4}</span>
-            </h2>
-            <p className="text-stone-500 text-base sm:text-lg leading-relaxed mb-5">{g.sub}</p>
-            <ul className="space-y-2.5 mb-7">
-              {g.bullets.map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-stone-600 text-sm">
-                  <span className="mt-0.5 w-4 h-4 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">
-                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-                      <path d="M1.5 4l2 2 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <div className="flex items-center gap-4">
-              <a
-                href="https://review-app-lyart-ten.vercel.app/signup"
-                className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold text-sm px-5 py-3 rounded-full transition-all duration-200 hover:shadow-md"
-              >
-                {g.ctaBtn}
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M2.5 7h9M8 3.5l3.5 3.5-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </a>
-              <span className="text-stone-400 text-sm">{g.ctaPrice}</span>
-            </div>
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest text-green-600 dark:text-green-400 font-semibold mb-4">
+            <span className="w-1 h-1 rounded-full bg-green-500"/>
+            {g.eyebrow}
           </div>
+          <h2 className="text-foreground font-bold text-3xl sm:text-4xl md:text-5xl leading-tight tracking-tight mb-4">
+            {g.title}
+          </h2>
+          <p className="text-text-muted text-base sm:text-lg leading-relaxed">{g.sub}</p>
+        </div>
 
-          {/* Visual — hidden on very small mobile, shown from sm up */}
-          <div className="hidden sm:block relative">
-            <div className="bg-stone-50 rounded-2xl border border-stone-200 p-6 sm:p-8 mb-4 card-shadow text-center">
-              <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                  <path d="M11 2l2 4 4.5.65-3.25 3.17.77 4.5L11 12l-4.02 2.32.77-4.5L4.5 6.65 9 6z" fill="white"/>
-                </svg>
-              </div>
-              <h3 className="text-stone-900 font-bold text-xl mb-1">{g.cardTitle}</h3>
-              <p className="text-stone-400 text-sm mb-6">{g.cardSub}</p>
-
-              <div className="bg-white border-2 border-green-400 rounded-xl p-4 mb-3 flex items-center gap-3 shadow-sm">
-                <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
-                  <GoogleLogo size={20} />
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 items-center">
+          {/* Visual: phone mockup with feedback card + table QR */}
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 via-transparent to-blue-400/10 blur-3xl" />
+            <div className="relative grid grid-cols-[1fr_1.1fr] gap-4 items-start">
+              {/* Table tent QR */}
+              <div className="bg-surface border border-border-soft rounded-2xl card-shadow p-4 sm:p-5 rotate-[-3deg] hover:rotate-0 transition-transform duration-300">
+                <div className="text-center mb-3">
+                  <div className="text-[10px] font-bold tracking-widest text-text-subtle uppercase mb-0.5">Aimly Utrecht</div>
+                  <div className="text-xs text-foreground font-semibold">Scan & share your visit</div>
                 </div>
-                <div className="flex-1 text-left">
-                  <p className="text-stone-800 font-semibold text-sm">{g.googleOption}</p>
-                  <p className="text-stone-400 text-xs">{g.googleSub}</p>
+                <div className="aspect-square bg-white rounded-lg p-2 border border-border-soft">
+                  <QrCode />
                 </div>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="text-stone-400 shrink-0">
-                  <path d="M9 1h4v4M13 1L7 7M5 3H2a1 1 0 00-1 1v8a1 1 0 001 1h8a1 1 0 001-1v-3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-
-              <div className="bg-white border border-stone-200 rounded-xl p-4 flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center shrink-0">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <path d="M3 3h12a1 1 0 011 1v8a1 1 0 01-1 1H5l-3 3V4a1 1 0 011-1z" stroke="#22c55e" strokeWidth="1.4" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <div className="flex-1 text-left">
-                  <p className="text-stone-700 font-semibold text-sm">{g.privateOption}</p>
-                  <p className="text-stone-400 text-xs">{g.privateSub}</p>
+                <div className="flex items-center justify-center gap-1.5 mt-3">
+                  <GoogleLogo size={10} />
+                  <span className="text-[9px] text-text-subtle font-medium">Google review</span>
                 </div>
               </div>
-              <p className="text-stone-400 text-xs mt-4">{g.cardFooter}</p>
-            </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-                <div className="text-green-500 text-xl mb-1">⭐⭐⭐⭐⭐</div>
-                <p className="text-green-700 text-xs font-semibold">{g.positive}</p>
-                <p className="text-stone-400 text-xs mt-1">{g.positiveDesc}</p>
-              </div>
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
-                <div className="text-amber-500 text-xl mb-1">💬</div>
-                <p className="text-amber-700 text-xs font-semibold">{g.critical}</p>
-                <p className="text-stone-400 text-xs mt-1">{g.criticalDesc}</p>
+              {/* Phone mockup */}
+              <div className="bg-foreground rounded-[2rem] p-2 card-shadow rotate-[3deg] hover:rotate-0 transition-transform duration-300">
+                <div className="bg-background rounded-[1.6rem] overflow-hidden">
+                  <div className="h-5 flex items-center justify-center">
+                    <div className="w-16 h-1 rounded-full bg-foreground/30"/>
+                  </div>
+                  <div className="p-4 pb-5">
+                    <div className="text-center mb-4">
+                      <div className="text-[10px] font-semibold text-text-subtle uppercase tracking-widest mb-1">Aimly Utrecht</div>
+                      <div className="text-foreground text-base font-bold leading-tight">{g.cardTitle}</div>
+                      <div className="text-[11px] text-text-subtle mt-0.5">{g.cardSub}</div>
+                    </div>
+                    <div className="flex justify-center gap-1.5 mb-4">
+                      {[1, 2, 3, 4, 5].map(i => (
+                        <button key={i} className={`w-8 h-8 rounded-full flex items-center justify-center ${i === 5 ? "bg-green-500" : "bg-surface-2"} transition-colors`}>
+                          <svg width="14" height="14" viewBox="0 0 12 12" fill={i === 5 ? "white" : "#a8a29e"}>
+                            <path d="M6 1l1.5 3 3.5.5-2.5 2.5.5 3.5L6 8.5 3 10.5l.5-3.5L1 4.5 4.5 4z"/>
+                          </svg>
+                        </button>
+                      ))}
+                    </div>
+                    <div className="bg-surface-2 border border-border-soft rounded-lg p-2.5 flex items-center gap-2">
+                      <GoogleLogo size={14}/>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[10px] text-text-subtle">Posting to</div>
+                        <div className="text-[11px] font-semibold text-foreground">Google Business</div>
+                      </div>
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-foreground"/></svg>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Mobile-only: simple flow diagram */}
-          <div className="sm:hidden grid grid-cols-2 gap-3">
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-              <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-2">
-                <GoogleLogo size={16} />
+          {/* Steps */}
+          <div className="space-y-1">
+            {[
+              { icon: <PrinterIcon/>, title: g.step1Title, desc: g.step1Desc },
+              { icon: <ScanIcon/>, title: g.step2Title, desc: g.step2Desc },
+              { icon: <StarIcon/>, title: g.step3Title, desc: g.step3Desc },
+            ].map((s, i) => (
+              <div key={i} className="flex gap-4 py-4 border-b border-border-soft last:border-0">
+                <div className="w-10 h-10 rounded-xl bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center shrink-0">
+                  {s.icon}
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-foreground font-semibold text-base mb-1">{s.title}</h3>
+                  <p className="text-text-muted text-sm leading-relaxed">{s.desc}</p>
+                </div>
               </div>
-              <p className="text-green-700 text-xs font-semibold">{g.positive}</p>
-              <p className="text-stone-400 text-xs mt-1">{g.positiveDesc}</p>
-            </div>
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
-              <div className="text-amber-500 text-2xl mb-2">💬</div>
-              <p className="text-amber-700 text-xs font-semibold">{g.critical}</p>
-              <p className="text-stone-400 text-xs mt-1">{g.criticalDesc}</p>
-            </div>
+            ))}
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function PrinterIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <path d="M5 2h8v4M5 14h8v2H5zM3 6h12a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1V7a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx="13" cy="9" r="0.8" fill="currentColor"/>
+    </svg>
+  );
+}
+function ScanIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <path d="M2 6V3a1 1 0 011-1h3M16 6V3a1 1 0 00-1-1h-3M2 12v3a1 1 0 001 1h3M16 12v3a1 1 0 01-1 1h-3M2 9h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  );
+}
+function StarIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <path d="M9 1.5l2.3 4.7 5.2.7-3.8 3.7.9 5.1L9 13.3l-4.6 2.4.9-5.1L1.5 7l5.2-.7z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+    </svg>
   );
 }
