@@ -13,6 +13,7 @@ export default function Partner() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  const [website, setWebsite] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -21,7 +22,7 @@ export default function Partner() {
       await fetch("/api/partner-inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, message }),
+        body: JSON.stringify({ name, email, phone, message, website }),
       });
       setSubmitted(true);
     } catch {
@@ -79,7 +80,7 @@ export default function Partner() {
                 <h3 className="text-foreground font-bold text-xl mb-2">{p.sent}</h3>
                 <p className="text-text-muted text-sm mb-6">{p.sentSub}</p>
                 <button
-                  onClick={() => { setOpen(false); setSubmitted(false); setName(""); setEmail(""); setPhone(""); setMessage(""); }}
+                  onClick={() => { setOpen(false); setSubmitted(false); setName(""); setEmail(""); setPhone(""); setMessage(""); setWebsite(""); }}
                   className="text-text-muted hover:text-foreground text-sm font-medium"
                 >
                   {p.close}
@@ -121,6 +122,17 @@ export default function Partner() {
                       className="w-full px-3.5 py-2.5 rounded-lg bg-surface border border-border-soft focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none text-sm text-foreground transition-colors resize-none"
                     />
                   </div>
+                  {/* Honeypot — hidden from real users, bots fill it in */}
+                  <input
+                    type="text"
+                    name="website"
+                    value={website}
+                    onChange={e => setWebsite(e.target.value)}
+                    className="hidden"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden
+                  />
                   <div className="flex gap-2 pt-2">
                     <button
                       type="submit" disabled={submitting}

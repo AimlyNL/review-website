@@ -2,10 +2,54 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
+// ---------------------------------------------------------------------------
+// In-memory sliding-window rate limiter (per serverless instance).
+// This is a basic threshold, not a hard guarantee: each cold-start spins up a
+// fresh instance with an empty map, so bursts across instances are possible.
+// Good enough to stop casual spam / Resend-quota abuse.
+// ---------------------------------------------------------------------------
+const WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const MAX_REQUESTS = 3;
+const ipLog = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const windowStart = now - WINDOW_MS;
+  const timestamps = (ipLog.get(ip) ?? []).filter(t => t > windowStart);
+  if (timestamps.length >= MAX_REQUESTS) {
+    ipLog.set(ip, timestamps);
+    return true;
+  }
+  timestamps.push(now);
+  ipLog.set(ip, timestamps);
+  return false;
+}
+
+function getClientIp(req: NextRequest): string {
+  const xff = req.headers.get("x-forwarded-for");
+  if (xff) return xff.split(",")[0].trim();
+  return req.headers.get("x-real-ip") ?? "unknown";
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, phone, message } = body ?? {};
+    const { name, email, phone, message, website } = body ?? {};
+
+    // Honeypot: if the hidden `website` field is filled in, silently drop the
+    // request without sending anything.
+    if (website) {
+      return NextResponse.json({ ok: true });
+    }
+
+    // Rate limit
+    const ip = getClientIp(req);
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { error: "Te veel aanvragen, probeer het later opnieuw" },
+        { status: 429 }
+      );
+    }
 
     if (!name || !email || !message) {
       return NextResponse.json({ ok: false, error: "Missing fields" }, { status: 400 });
